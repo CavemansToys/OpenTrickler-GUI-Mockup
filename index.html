@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenTrickler UI Mockups — v3.1.0</title>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .phone-width { max-width: 480px; margin: 0 auto; }
+  .tft-width { width: 480px; height: 320px; margin: 0 auto; }
+  .divider:not(:empty) { font-size: 200%; font-weight: bold; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .tft-screen { display: none; }
+  .tft-screen.active { display: flex; }
+  .lcd-screen { display: none; }
+  .lcd-screen.active { display: block; }
+  .tft-bg { background: #1E1E1E; color: #FFFFFF; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .tft-titlebar { height: 44px; background: #2196F3; display: flex; align-items: center; padding: 0 12px; color: white; font-size: 14px; font-weight: bold; }
+  .tft-panel { background: #2D2D2D; border-radius: 8px; padding: 8px; margin: 4px; }
+  .tft-btn-green { background: #4CAF50; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .tft-btn-red { background: #F44336; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .tft-btn-purple { background: #9C27B0; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .tft-btn-blue { background: #2196F3; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold; cursor: pointer; }
+  .tft-statusbar { height: 30px; background: #151515; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; font-size: 11px; color: #B0B0B0; }
+  .lcd-bezel { width: 440px; border: 16px solid #2a2a2a; border-radius: 10px; background: #2a2a2a; padding: 6px; }
+  .lcd-screen-area { width: 410px; height: 210px; background: #6b8b9e; border-radius: 3px; position: relative; overflow: hidden; }
+  .lcd-text { font-family: 'Courier New', monospace; font-size: 15px; color: #111; line-height: 20px; white-space: pre; }
+  .lcd-title-bar { background: #111; color: #6b8b9e; padding: 2px 8px; font-family: 'Courier New', monospace; font-size: 15px; }
+  .lcd-selected { background: #111; color: #6b8b9e; }
+  .badge-sm { font-size: 10px; padding: 1px 6px; }
+  .label-text { font-size: 12px; color: #888; }
+  .help-text { font-size: 10px; color: #666; }
+  .badge-warn { background: #f59e0b; color: #000; }
+  .badge-wo { background: #6b7280; color: #fff; font-size: 9px; padding: 1px 4px; border-radius: 3px; }
+  .device-label { text-align: center; font-weight: bold; color: #888; padding: 12px 0 8px; font-size: 16px; }
+  .wifi-dot { width:10px;height:10px;border-radius:50%;display:inline-block;background:gray; }
+  .exclude-bottom-nav { padding-bottom: 110px; }
+  .dev-footer {
+    position: fixed;
+    bottom: 64px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 11px;
+    opacity: 0.6;
+    padding: 4px 8px;
+    z-index: 40;
+    pointer-events: none;
+  }
+  .dev-footer a { pointer-events: auto; }
+
+  /* Portrait mode adjustments */
+  .tft-portrait .tft-menu-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .tft-portrait .tft-menu-grid button { width: 135px !important; height: 70px !important; font-size: 12px !important; }
+  .tft-portrait .tft-charge-weight { font-size: 26px !important; }
+  .tft-portrait .tft-charge-current { font-size: 30px !important; }
+  .tft-portrait .tft-titlebar { font-size: 13px !important; height: 40px !important; }
+  .tft-portrait .tft-panel { font-size: 12px !important; }
+</style>
+</head>
+<body class="bg-base-300">
+
+<!-- TAB SELECTOR -->
+<div class="tabs tabs-boxed justify-center sticky top-0 z-50 bg-base-100 shadow-lg p-2">
+  <a class="tab tab-active" onclick="showDevice('web', this)">📱 Web Portal</a>
+  <a class="tab" onclick="showDevice('tft', this)">🖥️ TFT35</a>
+  <a class="tab" onclick="showDevice('lcd', this)">⬛ LCD 12864</a>
+</div>
+
+<!-- ================================================================ -->
+<!-- WEB PORTAL -->
+<!-- ================================================================ -->
+<div id="device-web" class="phone-width p-2">
+
+  <!-- SHARED TOP NAVBAR -->
+  <div class="w-full navbar sticky top-0 bg-base-100 z-50" style="min-height:48px;">
+    <div class="flex-1"></div>
+    <div class="flex items-center gap-2">
+      <span class="wifi-dot" style="background:limegreen;"></span>
+      <span class="text-xs">OpenTrickler</span>
+      <div class="badge badge-ghost text-xs">v3.1.0</div>
+      <button class="btn btn-xs btn-ghost" onclick="webToggleTheme(this)">Dark</button>
+    </div>
+  </div>
+
+  <div id="web-trickler" class="grid grid-cols-1 exclude-bottom-nav">
+    <!-- Row 1: Stats -->
+    <div class="grid grid-cols-2">
+      <div class="stat">
+        <div class="stat-title">Current Weight</div>
+        <div class="stat-value text-3xl">30.02</div>
+        <div id="profileName" class="stat-desc text-primary cursor-pointer" onclick="webToast('Profile selector')">AR2208,gr</div>
+        <div class="stat-desc"><progress class="progress progress-primary" value="75" max="100"></progress></div>
+      </div>
+      <div class="stat text-right">
+        <div class="stat-title">Charging Time</div>
+        <div class="stat-value text-3xl">8.34 s</div>
+        <div class="stat-desc">&nbsp;</div>
+        <div class="stat-desc">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="px-4 mt-1">
+      <select class="select select-bordered select-primary select-sm w-full">
+        <option>#0: AR2208,gr</option><option>#1</option><option>#2</option><option>#3</option>
+      </select>
+    </div>
+
+    <!-- CHARGE MODE SECTION -->
+    <section id="web-charge">
+      <div class="grid grid-cols-1 gap-2 px-4">
+        <div class="divider">Charge Control</div>
+
+        <!-- 8-STEP INDICATOR -->
+        <ul class="steps">
+          <li class="step step-primary">Zero</li>
+          <li class="step step-primary">Coarse</li>
+          <li class="step step-primary">Reverse</li>
+          <li class="step step-primary">Fine</li>
+          <li class="step">Pulse</li>
+          <li class="step">Verify</li>
+          <li class="step">Remove</li>
+          <li class="step">Return</li>
+        </ul>
+
+        <input type="number" step="0.001" placeholder="Charge Weight" class="input input-bordered input-primary" value="30.0"/>
+
+        <div class="grid grid-cols-3 gap-2">
+          <button class="btn btn-primary btn-lg" onclick="webToast('Started')">Start</button>
+          <button class="btn btn-primary btn-lg" onclick="webToast('Tap sent')">Tap</button>
+          <button class="btn btn-warning btn-lg" disabled>Stop</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLEANUP SECTION (hidden) -->
+    <section id="web-purge" class="hidden px-4 pt-2">
+      <div class="divider">Cleanup Mode</div>
+      <span class="label-text">Trickler Speed (rps)</span>
+      <input id="tricklerSpeedSlider" type="range" min="-5" max="5" value="0" class="range range-lg" step="0.1" oninput="updatePurgeSpeed()"/>
+      <div class="text-center text-2xl font-mono mt-1" id="purgeSpeedVal">0.0 rps</div>
+      <div class="flex justify-between text-xs text-gray-500">
+        <span>◀ Reverse</span>
+        <span>Forward ▶</span>
+      </div>
+      <button class="btn btn-primary w-full mt-2" onclick="webToast('Cleanup stopped'); document.getElementById('tricklerSpeedSlider').value=0; updatePurgeSpeed();">Stop</button>
+    </section>
+
+    <!-- GENERAL CONTROL -->
+    <div class="grid grid-cols-1 gap-2 px-4 pt-3">
+      <div class="divider">General Control</div>
+      <div class="grid grid-cols-2 gap-2">
+        <button class="btn btn-neutral" onclick="webToast('Gate Open')">Gate Open</button>
+        <button class="btn btn-neutral" onclick="webToast('Gate Close')">Gate Close</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button class="btn btn-success" onclick="webToast('LED On')">LED On</button>
+        <button class="btn btn-neutral" onclick="webToast('LED Off')">LED Off</button>
+      </div>
+      <button id="simButton" class="btn btn-warning" onclick="webToggleSim(this)">Simulate</button>
+    </div>
+  </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <section id="web-settings" class="hidden">
+    <div class="drawer">
+      <input id="webDrawer" type="checkbox" class="drawer-toggle"/>
+      <div class="drawer-content exclude-bottom-nav">
+        <div class="w-full navbar sticky top-0 bg-base-100">
+          <label for="webDrawer" class="btn btn-square btn-ghost">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </label>
+          <div id="webSettingsTitle" class="px-2 text-2xl font-bold">Scale</div>
+        </div>
+
+        <div class="grid grid-cols-1 px-6 gap-2">
+
+          <!-- SCALE -->
+          <div id="ws-scale" class="ws-page">
+            <form class="grid grid-cols-1 gap-3">
+              <div><span class="label-text">Scale Driver</span>
+                <select class="select select-bordered w-full mt-1">
+                  <option>AND FX-i and FZ-i</option><option>Steinberg SBS</option><option>GNG JJB</option>
+                  <option>US Solid JFDBS</option><option>JM Science</option><option>Creedmoore</option><option>Radwag PS R2</option>
+                </select>
+              </div>
+              <div><span class="label-text">Serial Baudrate</span>
+                <select class="select select-bordered w-full mt-1"><option>4800</option><option>9600</option><option>19200</option></select>
+              </div>
+              <button class="btn btn-neutral">Apply</button>
+            </form>
+          </div>
+
+          <!-- PROFILES -->
+          <div id="ws-profile" class="ws-page hidden">
+            <div class="alert"><span><a href="#" class="link">Powder Profile Tuning Guide</a></span></div>
+            <div><span class="label-text">Select Profile</span>
+              <select class="select select-bordered select-primary mt-1">
+                <option>#0</option><option>#1</option><option>#2</option><option>#3</option><option>#4</option>
+                <option>#5</option><option>#6</option><option>#7</option><option>#8</option><option>#9</option>
+                <option>#10</option><option>#11</option><option>#12</option><option>#13</option><option>#14</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-1">
+              <button class="btn btn-neutral">Export Profile</button>
+              <button class="btn btn-error">Delete Profile</button>
+            </div>
+            <div class="divider"></div>
+            <div><span class="label-text">Profile Name</span><input class="input input-bordered w-full mt-1" value="AR2208,gr" maxlength="16"></div>
+            <div class="grid grid-cols-3 gap-2 mt-1">
+              <div><span class="label-text">C.Kp</span><input class="input input-bordered input-sm" value="0.025" step="0.001"></div>
+              <div><span class="label-text">C.Ki</span><input class="input input-bordered input-sm" value="0.000" step="0.001"></div>
+              <div><span class="label-text">C.Kd</span><input class="input input-bordered input-sm" value="0.250" step="0.001"></div>
+              <div><span class="label-text">C.MinRPS</span><input class="input input-bordered input-sm" value="0.1" step="0.001"></div>
+              <div><span class="label-text">C.MaxRPS</span><input class="input input-bordered input-sm" value="5.0" step="0.001"></div>
+              <div></div>
+              <div><span class="label-text">F.Kp</span><input class="input input-bordered input-sm" value="0.500" step="0.001"></div>
+              <div><span class="label-text">F.Ki</span><input class="input input-bordered input-sm" value="0.000" step="0.001"></div>
+              <div><span class="label-text">F.Kd</span><input class="input input-bordered input-sm" value="2.000" step="0.001"></div>
+              <div><span class="label-text">F.MinRPS</span><input class="input input-bordered input-sm" value="0.1" step="0.001"></div>
+              <div><span class="label-text">F.MaxRPS</span><input class="input input-bordered input-sm" value="5.0" step="0.001"></div>
+            </div>
+            <button class="btn btn-neutral w-full mt-2">Apply</button>
+          </div>
+
+          <!-- CHARGE MODE -->
+          <div id="ws-charge" class="ws-page hidden">
+            <div class="grid grid-cols-4 gap-2">
+              <div><span class="label-text">Normal</span><input type="color" class="w-full h-10 rounded" value="#008000"></div>
+              <div><span class="label-text">Under</span><input type="color" class="w-full h-10 rounded" value="#ffff00"></div>
+              <div><span class="label-text">Over</span><input type="color" class="w-full h-10 rounded" value="#ff0000"></div>
+              <div><span class="label-text">Not Ready</span><input type="color" class="w-full h-10 rounded" value="#0000ff"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <div><span class="label-text">Set Point SD</span><input class="input input-bordered input-sm" value="0.02" step="0.001"></div>
+              <div><span class="label-text">Set Point Mean</span><input class="input input-bordered input-sm" value="0.02" step="0.001"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-1">
+              <div><span class="label-text">Decimal Places</span><select class="select select-bordered select-sm"><option>2</option><option>3</option></select></div>
+              <div><span class="label-text">Auto Zero on Cup Return</span><select class="select select-bordered select-sm"><option>Yes</option><option>No</option></select></div>
+            </div>
+            <div class="divider mt-2">Pulse Mode</div>
+            <div class="grid grid-cols-2 gap-2">
+              <div><span class="label-text">Enable</span><select class="select select-bordered select-sm"><option>No</option><option>Yes</option></select></div>
+              <div><span class="label-text">Threshold (gr)</span><input class="input input-bordered input-sm" value="0.5" step="0.01" min="0.3" max="1.0"></div>
+              <div><span class="label-text">Duration (ms)</span><input class="input input-bordered input-sm" value="50" step="5" min="10" max="200"></div>
+              <div><span class="label-text">Wait (ms)</span><input class="input input-bordered input-sm" value="200" step="10" min="50" max="500"></div>
+            </div>
+            <div class="divider mt-2">Coarse Reverse</div>
+            <div class="grid grid-cols-2 gap-2">
+              <div><span class="label-text">Speed (rps)</span><input class="input input-bordered input-sm" value="2.0" step="0.1" min="0"></div>
+              <div><span class="label-text">Revolutions</span><input class="input input-bordered input-sm" value="0.5" step="0.1" min="0"></div>
+            </div>
+            <div class="help-text mt-1">Reverse speed (0 = disabled). Duration computed from revolutions ÷ speed.</div>
+            <div class="divider mt-2">Mid-stage Gate</div>
+            <div class="grid grid-cols-1 gap-2">
+              <div><span class="label-text">Servo Gate Position (0=open, 1=close, -1=disabled)</span><input class="input input-bordered input-sm" value="-1.000" step="0.001" min="-1" max="1"></div>
+              <div class="help-text">Gate moves to this position when coarse stops, before fine phase.</div>
+            </div>
+            <div class="divider mt-2">Pre-Charge</div>
+            <div class="grid grid-cols-3 gap-2">
+              <div><span class="label-text">Enable</span><select class="select select-bordered select-sm"><option>Yes</option><option>No</option></select></div>
+              <div><span class="label-text">Duration (ms)</span><input class="input input-bordered input-sm" value="1000" step="1"></div>
+              <div><span class="label-text">Speed (rps)</span><input class="input input-bordered input-sm" value="2" step="0.001"></div>
+            </div>
+            <button class="btn btn-neutral w-full mt-2">Apply</button>
+          </div>
+
+          <!-- AI TUNING -->
+          <div id="ws-ai" class="ws-page hidden">
+            <div class="alert"><span>Auto-tune PID parameters. Place powder in hopper before starting.</span></div>
+            <div class="divider">Settings</div>
+            <div class="grid grid-cols-1 gap-2">
+              <div><span class="label-text">Select Profile</span>
+                <select class="select select-bordered select-sm"><option>#0</option><option>#1</option><option>#2</option><option>#3</option><option>#4</option><option>#5</option><option>#6</option><option>#7</option></select>
+              </div>
+              <div><span class="label-text">Target Weight (grains)</span><input class="input input-bordered" value="30.0" step="0.01" min="1" max="200"></div>
+            </div>
+            <div class="divider">Thresholds</div>
+            <div class="grid grid-cols-2 gap-2">
+              <div><span class="label-text">Coarse Stop (an)</span><input class="input input-bordered input-sm" value="5.0" step="0.001"></div>
+              <div><span class="label-text">Fine Stop (an)</span><input class="input input-bordered input-sm" value="0.03" step="0.001"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-1">
+              <div>
+                <div class="flex justify-between"><span class="label-text">Coarse Time Target</span><span class="badge badge-sm badge-primary">10.0s</span></div>
+                <input type="range" min="1" max="30" step="0.5" value="10" class="range range-sm range-primary"/>
+              </div>
+              <div>
+                <div class="flex justify-between"><span class="label-text">Total Time Target</span><span class="badge badge-sm badge-primary">15.0s</span></div>
+                <input type="range" min="5" max="60" step="0.5" value="15" class="range range-sm range-primary"/>
+              </div>
+            </div>
+            <button class="btn btn-neutral w-full mt-1">Apply</button>
+            <div class="divider">Tuning Status</div>
+            <div class="flex justify-between"><span>Status:</span><span class="badge badge-neutral">Idle</span></div>
+            <div class="flex justify-between"><span>Drops:</span><span>0</span></div>
+            <div class="grid grid-cols-3 gap-2 mt-2">
+              <button class="btn btn-primary btn-sm">Start</button>
+              <button class="btn btn-error btn-sm" disabled>Cancel</button>
+              <button class="btn btn-success btn-sm" disabled>Apply Recs</button>
+            </div>
+            <div class="divider">Advanced Config</div>
+            <details class="collapse collapse-arrow">
+              <summary class="collapse-title text-sm">Show Config</summary>
+              <div class="collapse-content">
+                <div class="grid grid-cols-2 gap-2">
+                  <div><span class="label-text">C.Kp Min</span><input class="input input-bordered input-sm" value="0.01" step="0.01"></div>
+                  <div><span class="label-text">C.Kp Max</span><input class="input input-bordered input-sm" value="1.0" step="0.1"></div>
+                  <div><span class="label-text">C.Kd Min</span><input class="input input-bordered input-sm" value="0.01" step="0.01"></div>
+                  <div><span class="label-text">C.Kd Max</span><input class="input input-bordered input-sm" value="2.0" step="0.1"></div>
+                  <div><span class="label-text">F.Kp Min</span><input class="input input-bordered input-sm" value="0.01" step="0.01"></div>
+                  <div><span class="label-text">F.Kp Max</span><input class="input input-bordered input-sm" value="5.0" step="0.1"></div>
+                  <div><span class="label-text">F.Kd Min</span><input class="input input-bordered input-sm" value="0.01" step="0.01"></div>
+                  <div><span class="label-text">F.Kd Max</span><input class="input input-bordered input-sm" value="20.0" step="0.1"></div>
+                  <div><span class="label-text">Noise Margin (gr)</span><input class="input input-bordered input-sm" value="0.05" step="0.01"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-1">
+                  <button class="btn btn-primary btn-sm">Save Config</button>
+                  <button class="btn btn-ghost btn-sm">Reset</button>
+                </div>
+              </div>
+            </details>
+            <div class="divider">ML Data Collection</div>
+            <div class="flex items-center justify-between">
+              <span class="label-text">Enable ML data collection</span>
+              <input type="checkbox" class="toggle toggle-primary toggle-sm" checked/>
+            </div>
+            <div class="flex justify-between mt-1"><span>Recorded:</span><span class="badge badge-sm">0 drops</span></div>
+            <div class="grid grid-cols-2 gap-2 mt-1">
+              <button class="btn btn-ghost btn-xs">Refresh</button>
+              <button class="btn btn-ghost btn-xs">Clear History</button>
+            </div>
+          </div>
+
+          <!-- WIFI -->
+          <div id="ws-wifi" class="ws-page hidden">
+            <div><span class="label-text">WiFi SSID</span><input class="input input-bordered w-full mt-1" value="OpenTrickler" maxlength="32"></div>
+            <div class="mt-2"><span class="label-text">WiFi Password</span> <span class="badge-wo">Write Only</span><input type="password" class="input input-bordered w-full mt-1" placeholder="********" maxlength="63"></div>
+            <div class="mt-2"><span class="label-text">Authentication Method</span><select class="select select-bordered w-full mt-1"><option>None</option><option>WPA-TKIP</option><option>WPA2-AES</option><option>WPA2-MIXED</option></select></div>
+            <div class="mt-2"><span class="label-text">Connect Timeout (ms)</span><input class="input input-bordered w-full mt-1" value="10000" step="1000"></div>
+            <div class="mt-2"><span class="label-text">Enable WiFi</span><select class="select select-bordered w-full mt-1"><option>Yes</option><option>No</option></select></div>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button class="btn btn-neutral">Apply</button>
+              <button class="btn btn-error">Reset to AP Mode</button>
+            </div>
+          </div>
+
+          <!-- COARSE MOTOR -->
+          <div id="ws-coarse" class="ws-page hidden">
+            <div class="grid grid-cols-2 gap-2">
+              <div><span class="label-text">Acceleration (rps/s)</span><input class="input input-bordered input-sm" value="1.0" step="0.001"></div>
+              <div><span class="label-text">Full Steps/Rotation</span><select class="select select-bordered select-sm"><option>200</option><option>400</option></select></div>
+              <div><span class="label-text">Current (mA)</span><input class="input input-bordered input-sm" value="800" step="1"></div>
+              <div><span class="label-text">Microsteps</span><select class="select select-bordered select-sm"><option>16</option><option>32</option><option>64</option><option>128</option><option>256</option></select></div>
+              <div><span class="label-text">Max Speed (rps)</span><input class="input input-bordered input-sm" value="5.0" step="0.001"></div>
+              <div><span class="label-text">Min Speed (rps)</span><input class="input input-bordered input-sm" value="0.1" step="0.001"></div>
+              <div><span class="label-text">Sense Resistor (mOhm)</span><input class="input input-bordered input-sm" value="100" step="1"></div>
+              <div><span class="label-text">Gear Ratio</span><input class="input input-bordered input-sm" value="1.0" step="0.0000001"></div>
+              <div><span class="label-text">Inv Enable Pin</span><select class="select select-bordered select-sm"><option>No</option><option>Yes</option></select></div>
+              <div><span class="label-text">Inv Step Dir</span><select class="select select-bordered select-sm"><option>No</option><option>Yes</option></select></div>
+            </div>
+            <button class="btn btn-neutral w-full mt-2">Apply</button>
+          </div>
+
+          <!-- FINE MOTOR -->
+          <div id="ws-fine" class="ws-page hidden">
+            <div class="grid grid-cols-2 gap-2">
+              <div><span class="label-text">Acceleration (rps/s)</span><input class="input input-bordered input-sm" value="1.0" step="0.001"></div>
+              <div><span class="label-text">Full Steps/Rotation</span><select class="select select-bordered select-sm"><option>200</option><option>400</option></select></div>
+              <div><span class="label-text">Current (mA)</span><input class="input input-bordered input-sm" value="800" step="1"></div>
+              <div><span class="label-text">Microsteps</span><select class="select select-bordered select-sm"><option>16</option><option>32</option><option>64</option><option>128</option><option>256</option></select></div>
+              <div><span class="label-text">Max Speed (rps)</span><input class="input input-bordered input-sm" value="5.0" step="0.001"></div>
+              <div><span class="label-text">Min Speed (rps)</span><input class="input input-bordered input-sm" value="0.1" step="0.001"></div>
+              <div><span class="label-text">Sense Resistor (mOhm)</span><input class="input input-bordered input-sm" value="100" step="1"></div>
+              <div><span class="label-text">Gear Ratio</span><input class="input input-bordered input-sm" value="1.0" step="0.0000001"></div>
+              <div><span class="label-text">Inv Enable Pin</span><select class="select select-bordered select-sm"><option>No</option><option>Yes</option></select></div>
+              <div><span class="label-text">Inv Step Dir</span><select class="select select-bordered select-sm"><option>No</option><option>Yes</option></select></div>
+            </div>
+            <button class="btn btn-neutral w-full mt-2">Apply</button>
+          </div>
+
+          <!-- NEOPIXEL -->
+          <div id="ws-neo" class="ws-page hidden">
+            <div class="alert"><span>Default colour can be overridden by Charge Mode Functions.</span></div>
+            <div class="grid grid-cols-3 gap-2 mt-2">
+              <div><span class="label-text">Backlight</span><input type="color" class="w-full h-10 rounded" value="#0000ff"></div>
+              <div><span class="label-text">LED1</span><input type="color" class="w-full h-10 rounded" value="#008000"></div>
+              <div><span class="label-text">LED2</span><input type="color" class="w-full h-10 rounded" value="#008000"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-2">
+              <div><span class="label-text">Chain count</span><select class="select select-bordered select-sm"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option></select></div>
+              <div><span class="label-text">RGBW?</span><select class="select select-bordered select-sm"><option>Yes</option><option>No</option></select></div>
+              <div><span class="label-text">Colour Order</span><select class="select select-bordered select-sm"><option>RGB</option><option>GRB</option></select></div>
+            </div>
+            <button class="btn btn-neutral w-full mt-2">Apply</button>
+          </div>
+
+          <!-- DISPLAY -->
+          <div id="ws-display" class="ws-page hidden">
+            <div class="alert"><span>Changing display type requires a reboot.</span></div>
+            <div class="mt-2"><span class="label-text">Display Type</span><select class="select select-bordered w-full">
+              <option>Mini 12864 (128x64 Monochrome)</option>
+              <option>TFT35 V3.0.1 (480x320 Color Touch)</option>
+              <option>TFT43 V3.0 (480x272 Color Touch)</option>
+            </select></div>
+            <div class="mt-2"><span class="label-text">Rotation</span><select class="select select-bordered w-full"><option>0°</option><option>90°</option><option>180°</option><option>270°</option></select></div>
+            <div class="mt-2"><span class="label-text">Brightness: <span class="font-bold">255</span></span><input type="range" min="0" max="255" value="255" class="range range-primary w-full"/></div>
+            <div class="mt-2"><span class="label-text">Inverted Encoder</span><select class="select select-bordered w-full"><option>No</option><option>Yes</option></select></div>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button class="btn btn-neutral">Apply</button>
+              <button class="btn btn-warning">Save & Reboot</button>
+            </div>
+          </div>
+
+          <!-- SERVO GATE -->
+          <div id="ws-servo" class="ws-page hidden">
+            <div><span class="label-text">Servo Gate Enable</span><select class="select select-bordered w-full"><option>Yes</option><option>No</option></select></div>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <div><span class="label-text">Shutter0 Close Duty</span><input class="input input-bordered input-sm" value="0.500" step="0.001"></div>
+              <div><span class="label-text">Shutter0 Open Duty</span><input class="input input-bordered input-sm" value="0.100" step="0.001"></div>
+              <div><span class="label-text">Shutter1 Close Duty</span><input class="input input-bordered input-sm" value="0.500" step="0.001"></div>
+              <div><span class="label-text">Shutter1 Open Duty</span><input class="input input-bordered input-sm" value="0.100" step="0.001"></div>
+              <div><span class="label-text">Close Speed (%/s)</span><input class="input input-bordered input-sm" value="100" step="0.001"></div>
+              <div><span class="label-text">Open Speed (%/s)</span><input class="input input-bordered input-sm" value="100" step="0.001"></div>
+            </div>
+            <button class="btn btn-neutral w-full mt-2">Apply</button>
+          </div>
+
+          <!-- SYSTEM CONTROL -->
+          <div id="ws-system" class="ws-page hidden">
+            <div class="grid grid-cols-1 gap-2">
+              <div><span class="label-text">Unique ID</span><input class="input input-bordered w-full" value="abc123def456" disabled></div>
+              <div><span class="label-text">Firmware Version</span><input class="input input-bordered w-full" value="3.1.0" disabled></div>
+              <div><span class="label-text">VCS Hash</span><input class="input input-bordered w-full" value="abc1234" disabled></div>
+              <div><span class="label-text">Build Type</span><input class="input input-bordered w-full" value="Debug" disabled></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-2">
+              <button class="btn btn-primary">Save to EEPROM</button>
+              <button class="btn btn-warning">Reboot</button>
+              <button class="btn btn-error">Erase EEPROM</button>
+            </div>
+            <div class="divider"></div>
+            <div class="grid grid-cols-2 gap-2">
+              <button class="btn btn-neutral">Export Config</button>
+              <button class="btn btn-neutral">Import Config</button>
+            </div>
+          </div>
+
+          <!-- ERRORS -->
+          <div id="ws-errors" class="ws-page hidden">
+            <div class="flex justify-between items-center">
+              <span class="badge badge-sm badge-success">0 errors</span>
+              <button class="btn btn-ghost btn-xs">Refresh</button>
+            </div>
+            <div class="divider"></div>
+            <div class="text-center text-gray-500 py-8">No errors</div>
+            <button class="btn btn-warning w-full">Clear All Errors</button>
+          </div>
+
+        </div>
+      </div>
+      <div class="drawer-side">
+        <label for="webDrawer" class="drawer-overlay"></label>
+        <ul class="menu p-4 w-80 min-h-full bg-base-200">
+          <li class="menu-title">Settings</li>
+          <li><a onclick="wsNav('scale')">Scale</a></li>
+          <li><a onclick="wsNav('profile')">Profiles</a></li>
+          <li><a onclick="wsNav('charge')">Charge Mode</a></li>
+          <li><a onclick="wsNav('ai')">AI Tuning</a></li>
+          <li><a onclick="wsNav('wifi')">WiFi</a></li>
+          <li><a onclick="wsNav('coarse')">Coarse Trickler Motor</a></li>
+          <li><a onclick="wsNav('fine')">Fine Trickler Motor</a></li>
+          <li><a onclick="wsNav('neo')">Neopixel LED</a></li>
+          <li><a onclick="wsNav('display')">Display</a></li>
+          <li><a onclick="wsNav('servo')">Servo Gate</a></li>
+          <li><a onclick="wsNav('system')">System Control</a></li>
+          <li><a onclick="wsNav('errors')">Errors</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disclaimer footer (fixed above bottom nav) -->
+  <div class="dev-footer">
+    Developed by Gadgets — <a href="https://www.cavemanstoys.com" class="link link-hover" target="_blank">www.cavemanstoys.com</a>
+    &nbsp;|&nbsp; based on <a href="https://github.com/eamars/OpenTrickler-RP2040-Controller" class="link link-hover" target="_blank">OpenTrickler by Earmas</a>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="btm-nav">
+    <button class="active" onclick="webTab('charge', this)">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.8 4H5.2a1 1 0 0 0-.75 1.66l5.3 6.06a1 1 0 0 1 .25.66v4.87a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.12a1 1 0 0 1 .25-.66l5.3-6.06A1 1 0 0 0 18.8 4Z"/></svg>
+      <span class="text-sm">Trickler</span>
+    </button>
+    <button onclick="webTab('settings', this)">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12V1m0 11a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M4 19v-2m6-13.5V1m0 2.25a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5M16 19v-2"/></svg>
+      <span class="text-sm">Settings</span>
+    </button>
+    <button onclick="webTab('purge', this)">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/></svg>
+      <span class="text-sm">Purge</span>
+    </button>
+  </div>
+
+  <div id="web-toast" class="toast toast-end z-50" style="display:none;"><div class="alert alert-info"><span id="web-toast-text"></span></div></div>
+</div>
+
+
+<!-- ================================================================ -->
+<!-- TFT35 -->
+<!-- ================================================================ -->
+<div id="device-tft" style="display:none;" class="p-2">
+  <div class="device-label">TFT35 Display — 480×320 / 320×480 (Pico 2W / RP2350 only)</div>
+  <div style="text-align:center;margin-bottom:8px;">
+    <button id="tftRotBtn" class="btn btn-sm btn-primary" onclick="tftRotate()">🔄 Rotate 90°</button>
+    <span id="tftRotLabel" class="text-xs text-gray-500 ml-2">Landscape (480×320)</span>
+  </div>
+  <div id="tft-frame-wrap" style="display:flex;justify-content:center;transition:all 0.3s;">
+   <div class="tft-width" id="tft-frame" style="border:4px solid #333;border-radius:8px;overflow:hidden;position:relative;">
+
+    <!-- MAIN MENU -->
+    <div id="tft-main" class="tft-screen active tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>OpenTrickler</span><div class="flex-1"></div><span style="font-weight:normal;font-size:12px;">AR2208,gr</span></div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <div class="tft-menu-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <button class="tft-btn-green" style="width:130px;height:80px;font-size:13px;" onclick="tftGo('profile')">▶<br/>START</button>
+          <button class="tft-btn-purple" style="width:130px;height:80px;font-size:13px;" onclick="tftGo('cleanup')">↻<br/>CLEANUP</button>
+          <button class="tft-btn-blue" style="width:130px;height:80px;font-size:13px;" onclick="tftGo('profiles')">☰<br/>PROFILES</button>
+          <button class="tft-btn-blue" style="width:130px;height:80px;font-size:13px;" onclick="tftGo('ai')">🔋<br/>AI TUNE</button>
+          <button class="tft-btn-blue" style="width:130px;height:80px;font-size:13px;" onclick="tftGo('settings')">⚙<br/>SETTINGS</button>
+        </div>
+      </div>
+      <div class="tft-statusbar"><span>Ready</span><span>v3.1.0</span></div>
+    </div>
+
+    <!-- PROFILE SELECT -->
+    <div id="tft-profile" class="tft-screen tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>Select Profile</span><div class="flex-1"></div><span style="font-weight:normal;font-size:12px;">AR2208,gr</span></div>
+      <div style="flex:1;overflow-y:auto;padding:8px;">
+        <div style="background:#2196F3;padding:10px;border-radius:6px;margin-bottom:4px;cursor:pointer;" onclick="tftGo('chargeinput')">✓ #0: AR2208,gr</div>
+        <div style="background:#2D2D2D;padding:10px;border-radius:6px;margin-bottom:4px;">#1: Varget</div>
+        <div style="background:#2D2D2D;padding:10px;border-radius:6px;margin-bottom:4px;">#2: H4350</div>
+        <div style="background:#2D2D2D;padding:10px;border-radius:6px;margin-bottom:4px;">#3: 4198</div>
+      </div>
+      <div style="display:flex;padding:8px;gap:8px;">
+        <button class="tft-btn-blue" style="flex:1;" onclick="tftGo('main')">◀ Back</button>
+        <button class="tft-btn-green" style="flex:1;" onclick="tftGo('chargeinput')">Next ▶</button>
+      </div>
+    </div>
+
+    <!-- CHARGE INPUT -->
+    <div id="tft-chargeinput" class="tft-screen tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>Set Charge Weight</span><div class="flex-1"></div><span style="font-weight:normal;font-size:12px;">AR2208,gr</span></div>
+      <div style="flex:1;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div class="tft-panel" style="text-align:center;width:90%;margin-bottom:8px;">
+          <div class="tft-charge-weight" style="font-size:32px;font-weight:bold;font-family:monospace;">30.00 <span style="font-size:14px;color:#B0B0B0;">gr</span></div>
+          <div style="font-size:12px;color:#B0B0B0;margin-top:4px;">Scale: 0.000 gn</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="tft-btn-blue" style="font-size:12px;" onclick="tftGo('chargewarning')">EDIT</button>
+          <button class="tft-btn-blue" style="font-size:12px;">ZERO</button>
+          <button class="tft-btn-blue" style="font-size:12px;">CAL</button>
+        </div>
+      </div>
+      <div style="display:flex;padding:8px;gap:8px;">
+        <button class="tft-btn-blue" style="flex:1;" onclick="tftGo('profile')">◀ Back</button>
+        <button class="tft-btn-green" style="flex:1;" onclick="tftGo('chargewarning')">Start ▶</button>
+      </div>
+    </div>
+
+    <!-- CHARGE WARNING -->
+    <div id="tft-chargewarning" class="tft-screen tft-bg" style="height:320px;flex-direction:column;align-items:center;justify-content:center;">
+      <div class="tft-panel" style="text-align:center;padding:20px;">
+        <div style="font-size:18px;margin-bottom:12px;">⚠ Warning</div>
+        <div style="font-size:14px;color:#B0B0B0;">Put pan on the scale and</div>
+        <div style="font-size:14px;color:#B0B0B0;">press Yes to start charging.</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="tft-btn-red" onclick="tftGo('chargeinput')">No</button>
+        <button class="tft-btn-green" onclick="tftGo('chargemode')">Yes</button>
+      </div>
+    </div>
+
+    <!-- CHARGE MODE -->
+    <div id="tft-chargemode" class="tft-screen tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>Target: 30.00 gr</span><div class="flex-1"></div><span style="font-weight:normal;font-size:12px;">8.34s</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;">
+        <div class="tft-charge-current" style="font-size:36px;font-weight:bold;font-family:monospace;color:#4CAF50;">30.02</div>
+        <div style="font-size:14px;color:#B0B0B0;">gr</div>
+        <div style="margin-top:8px;font-size:13px;color:#4CAF50;">● On Target</div>
+        <div style="width:80%;margin-top:12px;height:8px;background:#333;border-radius:4px;overflow:hidden;">
+          <div style="width:100%;height:100%;background:#2196F3;"></div>
+        </div>
+      </div>
+      <div style="padding:8px;">
+        <button class="tft-btn-red" style="width:100%;height:50px;font-size:16px;" onclick="tftGo('main')">🛑 STOP</button>
+      </div>
+    </div>
+
+    <!-- CLEANUP MODE -->
+    <div id="tft-cleanup" class="tft-screen tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>Cleanup Mode</span></div>
+      <div style="flex:1;padding:8px;">
+        <div class="tft-panel" style="text-align:center;margin-bottom:8px;">
+          <div style="font-size:20px;font-family:monospace;">Weight: 0.000 gr</div>
+          <div style="font-size:13px;color:#B0B0B0;">Flow: 0.000 gr/s | Speed: 0.0 rps FWD</div>
+          <div style="font-size:12px;color:#B0B0B0;">Servo: Disabled</div>
+        </div>
+        <div style="text-align:center;font-size:12px;color:#B0B0B0;margin:8px 0;">Speed Control</div>
+        <input type="range" min="-200" max="200" value="0" class="range range-warning" style="width:100%;"/>
+        <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
+          <button class="tft-btn-purple" style="border-radius:50%;width:50px;height:50px;font-size:18px;">◀</button>
+          <button class="tft-btn-purple" style="width:100px;">STOP</button>
+          <button class="tft-btn-purple" style="border-radius:50%;width:50px;height:50px;font-size:18px;">▶</button>
+        </div>
+      </div>
+      <div style="padding:8px;">
+        <button class="tft-btn-red" style="width:100%;" onclick="tftGo('main')">EXIT</button>
+      </div>
+    </div>
+
+    <!-- AI TUNING -->
+    <div id="tft-ai" class="tft-screen tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>AI Auto-Tuning</span><div class="flex-1"></div><span style="font-weight:normal;font-size:12px;">AR2208,gr</span></div>
+      <div style="flex:1;overflow-y:auto;padding:8px;">
+        <div style="font-size:13px;color:#4CAF50;font-weight:bold;">Phase 1: Coarse — Drop 3/10</div>
+        <div style="font-size:11px;color:#B0B0B0;margin:4px 0;">Press START to begin</div>
+        <div class="tft-panel" style="margin:4px 0;">
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>Profile:</span><span>AR2208,gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>Target:</span><span>30.00 gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Stop:</span><span>5.00 gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>F.Stop:</span><span>0.030 gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Time:</span><span>10.0 s</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>T.Time:</span><span>15.0 s</span></div>
+        </div>
+        <div class="tft-panel" style="margin:4px 0;">
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Kp:</span><span>0.850</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Kd:</span><span>1.000</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>F.Kp:</span><span>2.500</span></div>
+          <div style="font-size:11px;display:flex;justify-content:between;"><span>F.Kd:</span><span>10.000</span></div>
+        </div>
+        <div style="width:100%;height:6px;background:#333;border-radius:3px;margin:6px 0;"><div style="width:30%;height:100%;background:#4CAF50;border-radius:3px;"></div></div>
+      </div>
+      <div style="display:flex;padding:8px;gap:8px;">
+        <button class="tft-btn-red" style="flex:1;" onclick="tftGo('main')">BACK</button>
+        <button class="tft-btn-green" style="flex:1;">START</button>
+        <button class="tft-btn-green" style="flex:1;display:none;">APPLY</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS LIST -->
+    <div id="tft-settings" class="tft-screen tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>Settings</span></div>
+      <div style="flex:1;overflow-y:auto;padding:4px;">
+        <div onclick="tftToast('Scale Settings')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">⬇ Scale</div>
+        <div onclick="tftToast('Charge Mode Settings')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">🔋 Charge Mode</div>
+        <div onclick="tftToast('Coarse Motor')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">💾 Coarse Motor</div>
+        <div onclick="tftToast('Fine Motor')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">💾 Fine Motor</div>
+        <div onclick="tftToast('Saved!')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">📁 Save to EEPROM</div>
+        <div onclick="tftToast('Servo Gate cycled')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">⚙ Servo Gate</div>
+        <div onclick="tftToast('Display Settings')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">🖼 Display</div>
+        <div onclick="tftToast('WiFi')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">📶 WiFi</div>
+        <div onclick="tftToast('Rebooting...')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">🔄 Reboot</div>
+        <div onclick="tftToast('Version Info')" style="background:#2D2D2D;padding:10px;border-radius:6px;margin:2px 0;cursor:pointer;font-size:13px;">⌂ Version Info</div>
+      </div>
+      <div style="padding:8px;">
+        <button class="tft-btn-blue" style="width:100px;" onclick="tftGo('main')">BACK</button>
+      </div>
+    </div>
+
+    <!-- PROFILE MANAGER -->
+    <div id="tft-profiles" class="tft-screen tft-bg" style="height:320px;flex-direction:column;">
+      <div class="tft-titlebar"><span>Profile Manager</span></div>
+      <div style="flex:1;overflow-y:auto;padding:8px;">
+        <div style="background:#2196F3;padding:10px;border-radius:6px;margin-bottom:4px;">✓ #0: AR2208,gr</div>
+        <div style="background:#2D2D2D;padding:10px;border-radius:6px;margin-bottom:4px;">#1: Varget</div>
+        <div style="background:#2D2D2D;padding:10px;border-radius:6px;margin-bottom:4px;">#2: H4350</div>
+        <div class="tft-panel" style="margin-top:8px;font-size:11px;">
+          <div>Current: AR2208,gr</div>
+          <div>C.Kp:0.03 Kd:0.25 | F.Kp:0.50 Kd:2.00</div>
+        </div>
+      </div>
+      <div style="display:flex;padding:8px;gap:8px;">
+        <button class="tft-btn-blue" style="flex:1;" onclick="tftGo('main')">BACK</button>
+        <button class="tft-btn-purple" style="flex:1;" onclick="tftToast('PID Editor')">EDIT PID</button>
+        <button class="tft-btn-green" style="flex:1;" onclick="tftToast('Saved!')">SAVE</button>
+      </div>
+    </div>
+
+    <div id="tft-toast" style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);background:#333;color:white;padding:8px 16px;border-radius:6px;font-size:13px;z-index:10;display:none;"></div>
+  </div>
+  </div>
+  <div style="text-align:center;margin-top:8px;"><button class="btn btn-sm" onclick="tftGo('main')">← Main Menu</button></div>
+</div>
+
+
+<!-- ================================================================ -->
+<!-- LCD 12864 -->
+<!-- ================================================================ -->
+<div id="device-lcd" style="display:none;" class="p-2">
+  <div class="device-label">Mini 12864 Display (128×64 monochrome, RP2040 & RP2350)</div>
+  <div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;">
+
+    <div class="lcd-bezel">
+      <div class="lcd-screen-area" id="lcd-display">
+        <div class="lcd-title-bar" style="display:flex;justify-content:space-between;"><span id="lcd-title">OpenTrickler</span><span>v3.1</span></div>
+        <div id="lcd-content" class="lcd-text" style="padding:2px 4px;"></div>
+      </div>
+      <div style="display:flex;justify-content:center;padding:8px 0;">
+        <div style="width:56px;height:56px;border-radius:50%;background:#444;border:3px solid #777;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;font-size:12px;font-weight:bold;" onclick="lcdEnter()">PUSH</div>
+      </div>
+    </div>
+
+    <div style="max-width:250px;">
+      <div class="text-xs font-bold mb-2">Rotary Encoder:</div>
+      <div class="flex flex-col gap-1">
+        <button class="btn btn-xs btn-primary" onclick="lcdUp()">▲ Up</button>
+        <button class="btn btn-xs btn-primary" onclick="lcdDown()">▼ Down</button>
+        <button class="btn btn-xs btn-success" onclick="lcdEnter()">↳ Enter</button>
+        <button class="btn btn-xs btn-ghost" onclick="lcdBack()">← Back</button>
+      </div>
+      <div class="text-xs mt-3 font-bold">Current:</div>
+      <div id="lcd-info" class="text-xs text-gray-500">Form 1: OpenTrickler</div>
+      <div class="text-xs mt-2 font-bold">Path:</div>
+      <div id="lcd-path" class="text-xs text-gray-400">Main</div>
+      <div class="text-xs mt-3 font-bold">Jump to:</div>
+      <select class="select select-xs" onchange="lcdJump(this.value)">
+        <option value="1">1: Main Menu</option>
+        <option value="10">10: Select Profile</option>
+        <option value="11">11: Charge Weight (2dp)</option>
+        <option value="12">12: Charge Weight (3dp)</option>
+        <option value="13">13: Warning (Charge)</option>
+        <option value="20">20: Warning (Cleanup)</option>
+        <option value="30">30: Settings</option>
+        <option value="31">31: Scale</option>
+        <option value="32">32: Profile Manager</option>
+        <option value="33">33: Profile List</option>
+        <option value="34">34: Profile PID Details</option>
+        <option value="38">38: Profile Misc Details</option>
+        <option value="35">35: Reboot</option>
+        <option value="36">36: Version Info</option>
+        <option value="37">37: EEPROM</option>
+        <option value="39">39: Servo Gate Control</option>
+        <option value="40">40: Wireless</option>
+        <option value="41">41: WiFi Info</option>
+        <option value="45">45: ML Data Collection</option>
+        <option value="51">51: Scale Calibration</option>
+        <option value="53">53: Select Scale Driver</option>
+        <option value="60">60: Save to EEPROM</option>
+        <option value="61">61: Erase EEPROM</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// === Tab switching ===
+function showDevice(d, el) {
+  document.querySelectorAll('[id^="device-"]').forEach(e => e.style.display = 'none');
+  document.getElementById('device-' + d).style.display = 'block';
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('tab-active'));
+  el.classList.add('tab-active');
+  const footer = document.querySelector('.dev-footer');
+  const btmNav = document.querySelector('.btm-nav');
+  if (footer) footer.style.display = (d === 'web') ? 'block' : 'none';
+  if (btmNav) btmNav.style.display = (d === 'web') ? 'flex' : 'none';
+  if (d === 'lcd') lcdRender();
+}
+
+// === Web Portal ===
+function webTab(page, el) {
+  const trickler = document.getElementById('web-trickler');
+  const settings = document.getElementById('web-settings');
+
+  if (page === 'settings') {
+    trickler.classList.add('hidden');
+    settings.classList.remove('hidden');
+  } else {
+    trickler.classList.remove('hidden');
+    settings.classList.add('hidden');
+    const charge = document.getElementById('web-charge');
+    const purge = document.getElementById('web-purge');
+    charge.style.display = (page === 'charge') ? 'block' : 'none';
+    purge.classList.toggle('hidden', page !== 'purge');
+  }
+
+  document.querySelectorAll('.btm-nav button').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function wsNav(page) {
+  document.querySelectorAll('.ws-page').forEach(p => p.classList.add('hidden'));
+  document.getElementById('ws-' + page).classList.remove('hidden');
+  document.getElementById('webSettingsTitle').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+  document.getElementById('webDrawer').checked = false;
+}
+
+function webToast(msg) {
+  const t = document.getElementById('web-toast');
+  document.getElementById('web-toast-text').textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2000);
+}
+
+function updatePurgeSpeed() {
+  const s = document.getElementById('tricklerSpeedSlider');
+  const v = document.getElementById('purgeSpeedVal');
+  if (!s) return;
+  v.textContent = parseFloat(s.value).toFixed(1) + ' rps';
+}
+
+function webToggleTheme(btn) {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  btn.textContent = next === 'dark' ? 'Dark' : 'Light';
+}
+
+function webToggleSim(btn) {
+  if (btn.innerText === 'Simulate') {
+    btn.innerText = 'Stop Sim';
+    btn.classList.remove('btn-warning');
+    btn.classList.add('btn-error');
+    webToast('Simulation started');
+  } else {
+    btn.innerText = 'Simulate';
+    btn.classList.remove('btn-error');
+    btn.classList.add('btn-warning');
+    webToast('Simulation stopped');
+  }
+}
+
+// === TFT35 ===
+function tftGo(screen) {
+  document.querySelectorAll('.tft-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('tft-' + screen).classList.add('active');
+}
+
+function tftToast(msg) {
+  const t = document.getElementById('tft-toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2000);
+}
+
+let tftLandscape = true;
+function tftRotate() {
+  tftLandscape = !tftLandscape;
+  const frame = document.getElementById('tft-frame');
+  const label = document.getElementById('tftRotLabel');
+  const screens = document.querySelectorAll('.tft-screen');
+  if (tftLandscape) {
+    frame.style.width = '480px';
+    frame.style.height = '320px';
+    screens.forEach(s => s.style.height = '320px');
+    frame.classList.remove('tft-portrait');
+    label.textContent = 'Landscape (480×320)';
+  } else {
+    frame.style.width = '320px';
+    frame.style.height = '480px';
+    screens.forEach(s => s.style.height = '480px');
+    frame.classList.add('tft-portrait');
+    label.textContent = 'Portrait (320×480)';
+  }
+}
+
+// === LCD 12864 ===
+let lcdForm = 1, lcdSel = 0;
+const lcdData = {
+  1:  { title:'OpenTrickler', path:'Main', items:['Start','Cleanup','Wireless','Settings'], next:[10,20,40,30] },
+  10: { title:'Select Profile', path:'Main > Profile', items:['Profile: #0','Next','Back'], next:[33,11,1] },
+  11: { title:'Select Charge Weight', path:'Profile > Weight', items:['30.00 gn','Next','Back'], next:[13,13,10] },
+  12: { title:'Select Charge Weight', path:'Profile > Weight', items:['30.000 gn','Next','Back'], next:[13,13,10] },
+  13: { title:'Warning', path:'Weight > Warn', items:['Put pan on the','scale and press','Next to trickle','Back','Next'], next:[1,1,1,10,1] },
+  20: { title:'Warning', path:'Cleanup > Warn', items:['Put pan on the','scale and press','Next to cleanup','Back','Next'], next:[1,1,1,1,1] },
+  30: { title:'Settings', path:'Settings', items:['Scale','Profile Manager','EEPROM','Servo Gate','ML Data','Reboot','Version','<-Return'], next:[31,32,37,39,45,35,36,1] },
+  31: { title:'Scale', path:'Settings > Scale', items:['Select Driver','Calibration','<-Return'], next:[53,51,30] },
+  32: { title:'Select Profile', path:'Settings > Profile', items:['#0: AR2208','Rev:0,Comp:0','Next','Back'], next:[33,33,34,30] },
+  33: { title:'Select Profile', path:'Profile > List', items:['#0: AR2208,gr','#1','#2','#3','#4'], next:[32,32,32,32,32] },
+  34: { title:'Profile Details (1/2)', path:'PID Details', items:['Kp:0.025','Ki:0.000','Kd:0.250','---','Kp:0.500','Ki:0.000','Kd:2.000','Next','Back'], next:[38,38,38,38,38,38,38,38,32] },
+  38: { title:'Profile Details (2/2)', path:'Misc Details', items:['Coarse:0.1,5.0','Fine  :0.1,5.0','Exit','Back'], next:[30,30,30,34] },
+  35: { title:'Reboot', path:'Settings > Reboot', items:['Press Next to perform','software reboot','Back','Next'], next:[30,30,30,1] },
+  36: { title:'Version Info', path:'Settings > Version', items:['Ver: 3.1.0','VCS: abc1234','Build: Debug',' OK '], next:[30,30,30,30] },
+  37: { title:'EEPROM', path:'Settings > EEPROM', items:['Save to EEPROM','Erase EEPROM','<-Return'], next:[60,61,30] },
+  39: { title:'Servo Gate Control', path:'Settings > Servo', items:['( ) Disable','(o) Close','( ) Open',' OK '], next:[30,30,30,30] },
+  40: { title:'Wireless', path:'Main > WiFi', items:['Wifi Info','<-Return'], next:[41,1] },
+  41: { title:'Wifi Info', path:'WiFi > Info', items:['Press OK to view','WiFi information',' OK '], next:[1,1,1] },
+  45: { title:'ML Data Collection', path:'Settings > ML', items:['Record charge data:','( ) Disable','(o) Enable',' OK '], next:[30,30,30,30] },
+  51: { title:'Warning', path:'Scale > Cal', items:['Clear the scale','and press Next','to calibrate','Back','Next'], next:[31,31,31,31,1] },
+  53: { title:'Select Scale Driver', path:'Scale > Driver', items:['Driver: A&D FX-i','  Steinberg SBS','  G&G JJB','Baud: 9600',' OK '], next:[31,31,31,31,31] },
+  60: { title:'Save to EEPROM', path:'EEPROM > Save', items:['Press Next to save','changes to EEPROM','Back','Next'], next:[37,37,37,1] },
+  61: { title:'Erase EEPROM', path:'EEPROM > Erase', items:['Press Next to erase','the EEPROM','Back','Next'], next:[37,37,37,1] },
+};
+
+function lcdRender() {
+  const f = lcdData[lcdForm]; if (!f) return;
+  document.getElementById('lcd-title').textContent = f.title;
+  document.getElementById('lcd-info').textContent = 'Form ' + lcdForm + ': ' + f.title;
+  document.getElementById('lcd-path').textContent = f.path;
+  let html = '';
+  f.items.forEach((item, i) => {
+    const sel = i === lcdSel;
+    html += '<div class="' + (sel ? 'lcd-selected' : '') + '" style="padding:0 4px;">' + (sel ? '> ' : '  ') + item + '</div>';
+  });
+  document.getElementById('lcd-content').innerHTML = html;
+}
+
+function lcdUp() { const f = lcdData[lcdForm]; if (f && lcdSel > 0) lcdSel--; lcdRender(); }
+function lcdDown() { const f = lcdData[lcdForm]; if (f && lcdSel < f.items.length - 1) lcdSel++; lcdRender(); }
+function lcdEnter() {
+  const f = lcdData[lcdForm]; if (!f) return;
+  const n = f.next[lcdSel]; if (n) { lcdForm = n; lcdSel = 0; lcdRender(); }
+}
+function lcdBack() {
+  const parents = {10:1,13:10,11:10,12:10,20:1,30:1,31:30,32:30,33:32,34:32,38:34,35:30,36:30,37:30,39:30,40:1,41:40,45:30,51:31,53:31,60:37,61:37};
+  const p = parents[lcdForm]; if (p) { lcdForm = p; lcdSel = 0; lcdRender(); }
+}
+function lcdJump(v) { lcdForm = parseInt(v); lcdSel = 0; lcdRender(); }
+
+window.addEventListener('load', () => {
+  const footer = document.querySelector('.dev-footer');
+  const btmNav = document.querySelector('.btm-nav');
+  if (footer) footer.style.display = 'block';
+  if (btmNav) btmNav.style.display = 'flex';
+  lcdRender();
+});
+</script>
+
+</body>
+</html>
