@@ -38,25 +38,27 @@
   .device-label { text-align: center; font-weight: bold; color: #888; padding: 12px 0 8px; font-size: 16px; }
   .wifi-dot { width:10px;height:10px;border-radius:50%;display:inline-block;background:gray; }
 
-  /* Bottom nav: fixed at bottom (DaisyUI default), content scrolls between */
-  .container-mock {
-    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  /* Dev footer sits fixed above the bottom nav */
-  .dev-footer {
+  /* Bottom wrapper: fixed container holding dev-footer + btm-nav as one solid block */
+  .bottom-wrapper {
     position: fixed;
-    bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
-    left: 0; right: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--fallback-b1, #1d232a);
+  }
+  .bottom-wrapper .btm-nav {
+    position: relative !important;
+  }
+  .container-mock {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+  .dev-footer {
     text-align: center;
     font-size: 11px;
     opacity: 0.6;
     padding: 2px 8px;
-    background: var(--fallback-b1, #1d232a);
-    z-index: 40;
-    pointer-events: none;
   }
-  .dev-footer a { pointer-events: auto; }
 
   /* Fix drawer menu scrolling */
   #webDrawerSlide {
@@ -517,26 +519,26 @@
     </div>
   </section>
 
-  <!-- BOTTOM NAV -->
-  <div class="btm-nav">
-    <button class="active" onclick="webTab('charge', this)">
-      <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.8 4H5.2a1 1 0 0 0-.75 1.66l5.3 6.06a1 1 0 0 1 .25.66v4.87a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.12a1 1 0 0 1 .25-.66l5.3-6.06A1 1 0 0 0 18.8 4Z"/></svg>
-      <span class="text-sm">Trickler</span>
-    </button>
-    <button onclick="webTab('settings', this)">
-      <svg class="w-5 h-5 mb-2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12V1m0 11a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M4 19v-2m6-13.5V1m0 2.25a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5M16 19v-2"/></svg>
-      <span class="text-sm">Settings</span>
-    </button>
-    <button onclick="webTab('purge', this)">
-      <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/></svg>
-      <span class="text-sm">Purge</span>
-    </button>
-  </div>
-
-  <!-- Dev footer (below bottom nav) -->
-  <div class="dev-footer">
-    Developed by Gadgets — <a href="https://www.cavemanstoys.com" class="link link-hover" target="_blank">www.cavemanstoys.com</a>
-    &nbsp;|&nbsp; based on <a href="https://github.com/eamars/OpenTrickler-RP2040-Controller" class="link link-hover" target="_blank">OpenTrickler by Earmas</a>
+  <!-- Bottom wrapper: dev footer + nav as one solid fixed block -->
+  <div class="bottom-wrapper">
+    <div class="dev-footer">
+      Developed by Gadgets — <a href="https://www.cavemanstoys.com" class="link link-hover" target="_blank">www.cavemanstoys.com</a>
+      &nbsp;|&nbsp; based on <a href="https://github.com/eamars/OpenTrickler-RP2040-Controller" class="link link-hover" target="_blank">OpenTrickler by Earmas</a>
+    </div>
+    <div class="btm-nav">
+      <button class="active" onclick="webTab('charge', this)">
+        <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.8 4H5.2a1 1 0 0 0-.75 1.66l5.3 6.06a1 1 0 0 1 .25.66v4.87a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.12a1 1 0 0 1 .25-.66l5.3-6.06A1 1 0 0 0 18.8 4Z"/></svg>
+        <span class="text-sm">Trickler</span>
+      </button>
+      <button onclick="webTab('settings', this)">
+        <svg class="w-5 h-5 mb-2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12V1m0 11a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M4 19v-2m6-13.5V1m0 2.25a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5M16 19v-2"/></svg>
+        <span class="text-sm">Settings</span>
+      </button>
+      <button onclick="webTab('purge', this)">
+        <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/></svg>
+        <span class="text-sm">Purge</span>
+      </button>
+    </div>
   </div>
 
   <div id="web-toast" class="toast toast-end z-50" style="display:none;"><div class="alert alert-info"><span id="web-toast-text"></span></div></div>
