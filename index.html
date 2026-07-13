@@ -61,6 +61,24 @@
     padding: 8px;
     margin-bottom: 8px;
   }
+  .steps-custom {
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+  }
+  .steps-custom .step {
+    min-width: auto !important;
+  }
+  .steps-custom .step::after {
+    height: 2px;
+  }
+  .steps-custom .step::before {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.65rem;
+  }
+  .steps-custom .step span, .steps-custom .step {
+    font-size: 0.65rem;
+  }
   #web-settings section[id="web-settings"] {
     border: 2px solid #3b82f6;
     border-radius: 8px;
@@ -159,10 +177,10 @@
         <div class="divider">Charge Control</div>
 
         <!-- 8-STEP INDICATOR -->
-        <ul class="steps">
+        <ul class="steps steps-custom">
           <li class="step step-primary">Zero</li>
           <li class="step step-primary">Coarse</li>
-          <li class="step step-primary">Reverse</li>
+          <li class="step step-primary">Rev</li>
           <li class="step step-primary">Fine</li>
           <li class="step">Pulse</li>
           <li class="step">Verify</li>
