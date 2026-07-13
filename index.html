@@ -64,20 +64,15 @@
   .steps-custom {
     overflow-x: auto;
     flex-wrap: nowrap !important;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .steps-custom::-webkit-scrollbar {
+    display: none;
   }
   .steps-custom .step {
     min-width: auto !important;
-  }
-  .steps-custom .step::after {
-    height: 2px;
-  }
-  .steps-custom .step::before {
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: 0.65rem;
-  }
-  .steps-custom .step span, .steps-custom .step {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
   #web-settings section[id="web-settings"] {
     border: 2px solid #3b82f6;
