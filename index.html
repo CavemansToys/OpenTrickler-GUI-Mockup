@@ -38,18 +38,25 @@
   .device-label { text-align: center; font-weight: bold; color: #888; padding: 12px 0 8px; font-size: 16px; }
   .wifi-dot { width:10px;height:10px;border-radius:50%;display:inline-block;background:gray; }
 
-  /* Flex sticky-footer: body is a column, content fills, nav sits at bottom */
-  #device-web {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    min-height: 100dvh;
+  /* Bottom nav: fixed at bottom (DaisyUI default), content scrolls between */
+  .container-mock {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
   }
-  .container-mock { flex: 1 0 auto; }
-  #device-web .btm-nav {
-    position: static !important;
-    flex-shrink: 0;
+
+  /* Dev footer sits fixed above the bottom nav */
+  .dev-footer {
+    position: fixed;
+    bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 11px;
+    opacity: 0.6;
+    padding: 2px 8px;
+    background: var(--fallback-b1, #1d232a);
+    z-index: 40;
+    pointer-events: none;
   }
+  .dev-footer a { pointer-events: auto; }
 
   /* Fix drawer menu scrolling */
   #webDrawerSlide {
@@ -63,14 +70,6 @@
   .btm-nav button { color: #6b7280; }
   .btm-nav button.active { color: #3b82f6 !important; }
   .btm-nav button.active svg, .btm-nav button.active span { color: #3b82f6 !important; }
-
-  .dev-footer {
-    text-align: center;
-    font-size: 11px;
-    opacity: 0.6;
-    padding: 4px 8px;
-  }
-  .dev-footer a { pointer-events: auto; }
 
   /* Portrait mode adjustments */
   .tft-portrait .tft-menu-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -794,7 +793,7 @@
 <script>
 function showDevice(d, el) {
   document.querySelectorAll('[id^="device-"]').forEach(e => e.style.display = 'none');
-  document.getElementById('device-' + d).style.display = (d === 'web') ? 'flex' : 'block';
+  document.getElementById('device-' + d).style.display = (d === 'web') ? 'block' : 'block';
   document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('tab-active'));
   el.classList.add('tab-active');
   if (d === 'lcd') lcdRender();
