@@ -2,12 +2,13 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenTrickler UI Mockups — v3.1.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OpenTrickler UI Mockup — v3.3.0</title>
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  .phone-width { max-width: 480px; margin: 0 auto; }
+  html, body { height: 100%; }
+  .phone-width { max-width: 480px; margin: 0 auto; width: 100%; }
   .tft-width { width: 480px; height: 320px; margin: 0 auto; }
   .divider:not(:empty) { font-size: 200%; font-weight: bold; }
   .screen { display: none; }
@@ -36,17 +37,38 @@
   .badge-wo { background: #6b7280; color: #fff; font-size: 9px; padding: 1px 4px; border-radius: 3px; }
   .device-label { text-align: center; font-weight: bold; color: #888; padding: 12px 0 8px; font-size: 16px; }
   .wifi-dot { width:10px;height:10px;border-radius:50%;display:inline-block;background:gray; }
-  .exclude-bottom-nav { padding-bottom: 110px; }
+
+  /* Flex sticky-footer: body is a column, content fills, nav sits at bottom */
+  #device-web {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .container-mock { flex: 1 0 auto; }
+  #device-web .btm-nav {
+    position: static !important;
+    flex-shrink: 0;
+  }
+
+  /* Fix drawer menu scrolling */
+  #webDrawerSlide {
+    max-height: calc(100vh - 64px - 4rem) !important;
+    max-height: calc(100dvh - 64px - 4rem - env(safe-area-inset-bottom, 0px)) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    flex-wrap: nowrap !important;
+  }
+  #webDrawerSlide li { width: 100% !important; }
+  .btm-nav button { color: #6b7280; }
+  .btm-nav button.active { color: #3b82f6 !important; }
+  .btm-nav button.active svg, .btm-nav button.active span { color: #3b82f6 !important; }
+
   .dev-footer {
-    position: fixed;
-    bottom: 64px;
-    left: 0; right: 0;
     text-align: center;
     font-size: 11px;
     opacity: 0.6;
     padding: 4px 8px;
-    z-index: 40;
-    pointer-events: none;
   }
   .dev-footer a { pointer-events: auto; }
 
@@ -72,6 +94,7 @@
 <!-- WEB PORTAL -->
 <!-- ================================================================ -->
 <div id="device-web" class="phone-width p-2">
+  <div class="container-mock">
 
   <!-- SHARED TOP NAVBAR -->
   <div class="w-full navbar sticky top-0 bg-base-100 z-50" style="min-height:48px;">
@@ -79,12 +102,12 @@
     <div class="flex items-center gap-2">
       <span class="wifi-dot" style="background:limegreen;"></span>
       <span class="text-xs">OpenTrickler</span>
-      <div class="badge badge-ghost text-xs">v3.1.0</div>
+      <div class="badge badge-ghost text-xs">v3.3.0</div>
       <button class="btn btn-xs btn-ghost" onclick="webToggleTheme(this)">Dark</button>
     </div>
   </div>
 
-  <div id="web-trickler" class="grid grid-cols-1 exclude-bottom-nav">
+  <div id="web-trickler" class="grid grid-cols-1">
     <!-- Row 1: Stats -->
     <div class="grid grid-cols-2">
       <div class="stat">
@@ -124,12 +147,25 @@
           <li class="step">Return</li>
         </ul>
 
+        <!-- AI Tuning panel (shown when active) -->
+        <div id="aiTuningPanel" class="bg-base-200 rounded-lg p-3 text-sm" style="display:none;">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-bold text-primary">AI Tuning Active</span>
+            <span class="badge badge-primary">Phase 1</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div><span class="text-gray-500">Drop:</span> <span class="font-mono">3/10</span></div>
+            <div><span class="text-gray-500">Testing:</span> <span class="font-mono">Kp=0.85 Kd=1.00</span></div>
+            <div><span class="text-gray-500">Last:</span> <span class="font-mono">+0.02g 8.5s</span></div>
+          </div>
+        </div>
+
         <input type="number" step="0.001" placeholder="Charge Weight" class="input input-bordered input-primary" value="30.0"/>
 
         <div class="grid grid-cols-4 gap-2">
           <button class="btn btn-primary btn-lg" onclick="webToast('Started')">Start</button>
           <button class="btn btn-primary btn-lg" onclick="webToast('Scale zeroed')">Zero</button>
-          <button class="btn btn-primary btn-lg" onclick="webToast('Tap sent')">Tap</button>
+          <button class="btn btn-secondary btn-lg" onclick="webToast('Tap sent')">Tap</button>
           <button class="btn btn-warning btn-lg" disabled>Stop</button>
         </div>
       </div>
@@ -168,7 +204,7 @@
   <section id="web-settings" class="hidden">
     <div class="drawer">
       <input id="webDrawer" type="checkbox" class="drawer-toggle"/>
-      <div class="drawer-content exclude-bottom-nav">
+      <div class="drawer-content">
         <div class="w-full navbar sticky top-0 bg-base-100">
           <label for="webDrawer" class="btn btn-square btn-ghost">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -180,7 +216,7 @@
 
           <!-- SCALE -->
           <div id="ws-scale" class="ws-page">
-            <form class="grid grid-cols-1 gap-3">
+            <form class="grid grid-cols-1 gap-3" onsubmit="event.preventDefault(); webToast('Scale settings applied')">
               <div><span class="label-text">Scale Driver</span>
                 <select class="select select-bordered w-full mt-1">
                   <option>AND FX-i and FZ-i</option><option>Steinberg SBS</option><option>GNG JJB</option>
@@ -196,17 +232,16 @@
 
           <!-- PROFILES -->
           <div id="ws-profile" class="ws-page hidden">
-            <div class="alert"><span><a href="#" class="link">Powder Profile Tuning Guide</a></span></div>
+            <div class="alert"><span><a href="https://github.com/eamars/OpenTrickler/blob/main/Manual/tuning_guide.md" class="link" target="_blank">Powder Profile Tuning Guide</a></span></div>
             <div><span class="label-text">Select Profile</span>
               <select class="select select-bordered select-primary mt-1">
-                <option>#0</option><option>#1</option><option>#2</option><option>#3</option><option>#4</option>
-                <option>#5</option><option>#6</option><option>#7</option><option>#8</option><option>#9</option>
-                <option>#10</option><option>#11</option><option>#12</option><option>#13</option><option>#14</option>
+                <option>#0: AR2208,gr</option><option>#1: Varget</option><option>#2: H4350</option><option>#3: 4198</option>
+                <option>#4</option><option>#5</option><option>#6</option><option>#7</option>
               </select>
             </div>
             <div class="grid grid-cols-2 gap-2 mt-1">
-              <button class="btn btn-neutral">Export Profile</button>
-              <button class="btn btn-error">Delete Profile</button>
+              <button class="btn btn-neutral" onclick="webToast('Profile exported')">Export</button>
+              <button class="btn btn-warning" onclick="webToast('Profile reset')">Reset Profile</button>
             </div>
             <div class="divider"></div>
             <div><span class="label-text">Profile Name</span><input class="input input-bordered w-full mt-1" value="AR2208,gr" maxlength="16"></div>
@@ -249,16 +284,18 @@
               <div><span class="label-text">Duration (ms)</span><input class="input input-bordered input-sm" value="50" step="5" min="10" max="200"></div>
               <div><span class="label-text">Wait (ms)</span><input class="input input-bordered input-sm" value="200" step="10" min="50" max="500"></div>
             </div>
-            <div class="divider mt-2">Coarse Reverse</div>
-            <div class="grid grid-cols-2 gap-2">
-              <div><span class="label-text">Speed (rps)</span><input class="input input-bordered input-sm" value="2.0" step="0.1" min="0"></div>
-              <div><span class="label-text">Revolutions</span><input class="input input-bordered input-sm" value="0.5" step="0.1" min="0"></div>
-            </div>
-            <div class="help-text mt-1">Reverse speed (0 = disabled). Duration computed from revolutions ÷ speed.</div>
-            <div class="divider mt-2">Mid-stage Gate</div>
+            <div class="divider mt-2">Coarse Tube Reverse</div>
             <div class="grid grid-cols-1 gap-2">
-              <div><span class="label-text">Servo Gate Position (0=open, 1=close, -1=disabled)</span><input class="input input-bordered input-sm" value="-1.000" step="0.001" min="-1" max="1"></div>
-              <div class="help-text">Gate moves to this position when coarse stops, before fine phase.</div>
+              <div>
+                <span class="label-text">Coarse Reverse Revolutions</span>
+                <input class="input input-bordered input-sm" value="0.5" step="0.1" min="0" max="9.9">
+                <div class="help-text">Number of motor revolutions to reverse after coarse stop (0 = disabled)</div>
+              </div>
+              <div>
+                <span class="label-text">Coarse Reverse Speed (rps)</span>
+                <input class="input input-bordered input-sm" value="2.0" step="0.1" min="0" max="9.9">
+                <div class="help-text">Motor speed when reversing to clear tube after coarse stop</div>
+              </div>
             </div>
             <div class="divider mt-2">Pre-Charge</div>
             <div class="grid grid-cols-3 gap-2">
@@ -275,14 +312,14 @@
             <div class="divider">Settings</div>
             <div class="grid grid-cols-1 gap-2">
               <div><span class="label-text">Select Profile</span>
-                <select class="select select-bordered select-sm"><option>#0</option><option>#1</option><option>#2</option><option>#3</option><option>#4</option><option>#5</option><option>#6</option><option>#7</option></select>
+                <select class="select select-bordered select-sm"><option>#0: AR2208,gr</option><option>#1</option><option>#2</option><option>#3</option><option>#4</option><option>#5</option><option>#6</option><option>#7</option></select>
               </div>
               <div><span class="label-text">Target Weight (grains)</span><input class="input input-bordered" value="30.0" step="0.01" min="1" max="200"></div>
             </div>
             <div class="divider">Thresholds</div>
             <div class="grid grid-cols-2 gap-2">
-              <div><span class="label-text">Coarse Stop (an)</span><input class="input input-bordered input-sm" value="5.0" step="0.001"></div>
-              <div><span class="label-text">Fine Stop (an)</span><input class="input input-bordered input-sm" value="0.03" step="0.001"></div>
+              <div><span class="label-text">Coarse Stop (gr)</span><input class="input input-bordered input-sm" value="5.0" step="0.001"></div>
+              <div><span class="label-text">Fine Stop (gr)</span><input class="input input-bordered input-sm" value="0.03" step="0.001"></div>
             </div>
             <div class="grid grid-cols-2 gap-2 mt-1">
               <div>
@@ -392,7 +429,7 @@
               <div><span class="label-text">LED2</span><input type="color" class="w-full h-10 rounded" value="#008000"></div>
             </div>
             <div class="grid grid-cols-3 gap-2 mt-2">
-              <div><span class="label-text">Chain count</span><select class="select select-bordered select-sm"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option></select></div>
+              <div><span class="label-text">Chain count</span><select class="select select-bordered select-sm"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
               <div><span class="label-text">RGBW?</span><select class="select select-bordered select-sm"><option>Yes</option><option>No</option></select></div>
               <div><span class="label-text">Colour Order</span><select class="select select-bordered select-sm"><option>RGB</option><option>GRB</option></select></div>
             </div>
@@ -402,14 +439,11 @@
           <!-- DISPLAY -->
           <div id="ws-display" class="ws-page hidden">
             <div class="alert"><span>Changing display type requires a reboot.</span></div>
-            <div class="mt-2"><span class="label-text">Display Type</span><select class="select select-bordered w-full">
-              <option>Mini 12864 (128x64 Monochrome)</option>
-              <option>TFT35 V3.0.1 (480x320 Color Touch)</option>
-              <option>TFT43 V3.0 (480x272 Color Touch)</option>
-            </select></div>
+            <div class="mt-2"><span class="label-text">Display Type</span>
+              <div class="font-bold py-2">Mini 12864</div>
+            </div>
             <div class="mt-2"><span class="label-text">Rotation</span><select class="select select-bordered w-full"><option>0°</option><option>90°</option><option>180°</option><option>270°</option></select></div>
-            <div class="mt-2"><span class="label-text">Brightness: <span class="font-bold">255</span></span><input type="range" min="0" max="255" value="255" class="range range-primary w-full"/></div>
-            <div class="mt-2"><span class="label-text">Inverted Encoder</span><select class="select select-bordered w-full"><option>No</option><option>Yes</option></select></div>
+            <div id="brightnessGroup" class="mt-2"><span class="label-text">Brightness: <span id="brightnessLabel" class="font-bold">255</span></span><input type="range" min="0" max="255" value="255" class="range range-primary w-full" oninput="document.getElementById('brightnessLabel').innerText=this.value"/></div>
             <div class="grid grid-cols-2 gap-2 mt-2">
               <button class="btn btn-neutral">Apply</button>
               <button class="btn btn-warning">Save & Reboot</button>
@@ -434,9 +468,9 @@
           <div id="ws-system" class="ws-page hidden">
             <div class="grid grid-cols-1 gap-2">
               <div><span class="label-text">Unique ID</span><input class="input input-bordered w-full" value="abc123def456" disabled></div>
-              <div><span class="label-text">Firmware Version</span><input class="input input-bordered w-full" value="3.1.0" disabled></div>
+              <div><span class="label-text">Firmware Version</span><input class="input input-bordered w-full" value="3.3.0" disabled></div>
               <div><span class="label-text">VCS Hash</span><input class="input input-bordered w-full" value="abc1234" disabled></div>
-              <div><span class="label-text">Build Type</span><input class="input input-bordered w-full" value="Debug" disabled></div>
+              <div><span class="label-text">Build Type</span><input class="input input-bordered w-full" value="Release" disabled></div>
             </div>
             <div class="grid grid-cols-3 gap-2 mt-2">
               <button class="btn btn-primary">Save to EEPROM</button>
@@ -465,26 +499,26 @@
       </div>
       <div class="drawer-side">
         <label for="webDrawer" class="drawer-overlay"></label>
-        <ul class="menu p-4 w-80 min-h-full bg-base-200">
+        <ul id="webDrawerSlide" class="menu p-4 w-60 min-h-full bg-base-200">
           <li class="menu-title">Settings</li>
-          <li><a onclick="wsNav('scale')">Scale</a></li>
-          <li><a onclick="wsNav('profile')">Profiles</a></li>
-          <li><a onclick="wsNav('charge')">Charge Mode</a></li>
-          <li><a onclick="wsNav('ai')">AI Tuning</a></li>
-          <li><a onclick="wsNav('wifi')">WiFi</a></li>
-          <li><a onclick="wsNav('coarse')">Coarse Trickler Motor</a></li>
-          <li><a onclick="wsNav('fine')">Fine Trickler Motor</a></li>
-          <li><a onclick="wsNav('neo')">Neopixel LED</a></li>
-          <li><a onclick="wsNav('display')">Display</a></li>
-          <li><a onclick="wsNav('servo')">Servo Gate</a></li>
-          <li><a onclick="wsNav('system')">System Control</a></li>
-          <li><a onclick="wsNav('errors')">Errors</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('scale')">Scale</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('profile')">Profiles</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('charge')">Charge Mode</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('ai')">AI Tuning</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('wifi')">WiFi</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('coarse')">Coarse Motor</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('fine')">Fine Motor</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('neo')">Neopixel LED</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('display')">Display</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('servo')">Servo Gate</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('system')">System Control</a></li>
+          <li><a class="text-2xl font-bold" onclick="wsNav('errors')">Errors</a></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- Disclaimer footer (fixed above bottom nav) -->
+  <!-- Dev footer -->
   <div class="dev-footer">
     Developed by Gadgets — <a href="https://www.cavemanstoys.com" class="link link-hover" target="_blank">www.cavemanstoys.com</a>
     &nbsp;|&nbsp; based on <a href="https://github.com/eamars/OpenTrickler-RP2040-Controller" class="link link-hover" target="_blank">OpenTrickler by Earmas</a>
@@ -493,15 +527,15 @@
   <!-- BOTTOM NAV -->
   <div class="btm-nav">
     <button class="active" onclick="webTab('charge', this)">
-      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.8 4H5.2a1 1 0 0 0-.75 1.66l5.3 6.06a1 1 0 0 1 .25.66v4.87a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.12a1 1 0 0 1 .25-.66l5.3-6.06A1 1 0 0 0 18.8 4Z"/></svg>
+      <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.8 4H5.2a1 1 0 0 0-.75 1.66l5.3 6.06a1 1 0 0 1 .25.66v4.87a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.12a1 1 0 0 1 .25-.66l5.3-6.06A1 1 0 0 0 18.8 4Z"/></svg>
       <span class="text-sm">Trickler</span>
     </button>
     <button onclick="webTab('settings', this)">
-      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12V1m0 11a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M4 19v-2m6-13.5V1m0 2.25a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5M16 19v-2"/></svg>
+      <svg class="w-5 h-5 mb-2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12V1m0 11a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M4 19v-2m6-13.5V1m0 2.25a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5M16 19v-2"/></svg>
       <span class="text-sm">Settings</span>
     </button>
     <button onclick="webTab('purge', this)">
-      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/></svg>
+      <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/></svg>
       <span class="text-sm">Purge</span>
     </button>
   </div>
@@ -534,7 +568,7 @@
           <button class="tft-btn-blue" style="width:130px;height:80px;font-size:13px;" onclick="tftGo('settings')">⚙<br/>SETTINGS</button>
         </div>
       </div>
-      <div class="tft-statusbar"><span>Ready</span><span>v3.1.0</span></div>
+      <div class="tft-statusbar"><span>Ready</span><span>v3.3.0</span></div>
     </div>
 
     <!-- PROFILE SELECT -->
@@ -597,7 +631,7 @@
         </div>
       </div>
       <div style="padding:8px;">
-        <button class="tft-btn-red" style="width:100%;height:50px;font-size:16px;" onclick="tftGo('main')">🛑 STOP</button>
+        <button class="tft-btn-red" style="width:100%;height:50px;font-size:16px;" onclick="tftGo('main')">🛓 STOP</button>
       </div>
     </div>
 
@@ -630,25 +664,24 @@
         <div style="font-size:13px;color:#4CAF50;font-weight:bold;">Phase 1: Coarse — Drop 3/10</div>
         <div style="font-size:11px;color:#B0B0B0;margin:4px 0;">Press START to begin</div>
         <div class="tft-panel" style="margin:4px 0;">
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>Profile:</span><span>AR2208,gr</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>Target:</span><span>30.00 gr</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Stop:</span><span>5.00 gr</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>F.Stop:</span><span>0.030 gr</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Time:</span><span>10.0 s</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>T.Time:</span><span>15.0 s</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>Profile:</span><span>AR2208,gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>Target:</span><span>30.00 gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>C.Stop:</span><span>5.00 gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>F.Stop:</span><span>0.030 gr</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>C.Time:</span><span>10.0 s</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>T.Time:</span><span>15.0 s</span></div>
         </div>
         <div class="tft-panel" style="margin:4px 0;">
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Kp:</span><span>0.850</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>C.Kd:</span><span>1.000</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>F.Kp:</span><span>2.500</span></div>
-          <div style="font-size:11px;display:flex;justify-content:between;"><span>F.Kd:</span><span>10.000</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>C.Kp:</span><span>0.850</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>C.Kd:</span><span>1.000</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>F.Kp:</span><span>2.500</span></div>
+          <div style="font-size:11px;display:flex;justify-content:space-between;"><span>F.Kd:</span><span>10.000</span></div>
         </div>
         <div style="width:100%;height:6px;background:#333;border-radius:3px;margin:6px 0;"><div style="width:30%;height:100%;background:#4CAF50;border-radius:3px;"></div></div>
       </div>
       <div style="display:flex;padding:8px;gap:8px;">
         <button class="tft-btn-red" style="flex:1;" onclick="tftGo('main')">BACK</button>
         <button class="tft-btn-green" style="flex:1;">START</button>
-        <button class="tft-btn-green" style="flex:1;display:none;">APPLY</button>
       </div>
     </div>
 
@@ -707,7 +740,7 @@
 
     <div class="lcd-bezel">
       <div class="lcd-screen-area" id="lcd-display">
-        <div class="lcd-title-bar" style="display:flex;justify-content:space-between;"><span id="lcd-title">OpenTrickler</span><span>v3.1</span></div>
+        <div class="lcd-title-bar" style="display:flex;justify-content:space-between;"><span id="lcd-title">OpenTrickler</span><span>v3.3</span></div>
         <div id="lcd-content" class="lcd-text" style="padding:2px 4px;"></div>
       </div>
       <div style="display:flex;justify-content:center;padding:8px 0;">
@@ -759,24 +792,17 @@
 
 
 <script>
-// === Tab switching ===
 function showDevice(d, el) {
   document.querySelectorAll('[id^="device-"]').forEach(e => e.style.display = 'none');
-  document.getElementById('device-' + d).style.display = 'block';
+  document.getElementById('device-' + d).style.display = (d === 'web') ? 'flex' : 'block';
   document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('tab-active'));
   el.classList.add('tab-active');
-  const footer = document.querySelector('.dev-footer');
-  const btmNav = document.querySelector('.btm-nav');
-  if (footer) footer.style.display = (d === 'web') ? 'block' : 'none';
-  if (btmNav) btmNav.style.display = (d === 'web') ? 'flex' : 'none';
   if (d === 'lcd') lcdRender();
 }
 
-// === Web Portal ===
 function webTab(page, el) {
   const trickler = document.getElementById('web-trickler');
   const settings = document.getElementById('web-settings');
-
   if (page === 'settings') {
     trickler.classList.add('hidden');
     settings.classList.remove('hidden');
@@ -788,15 +814,18 @@ function webTab(page, el) {
     charge.style.display = (page === 'charge') ? 'block' : 'none';
     purge.classList.toggle('hidden', page !== 'purge');
   }
-
-  document.querySelectorAll('.btm-nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#device-web .btm-nav button').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
 }
 
 function wsNav(page) {
   document.querySelectorAll('.ws-page').forEach(p => p.classList.add('hidden'));
-  document.getElementById('ws-' + page).classList.remove('hidden');
-  document.getElementById('webSettingsTitle').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+  const pageEl = document.getElementById('ws-' + page);
+  if (pageEl) pageEl.classList.remove('hidden');
+  const titles = { scale:'Scale', profile:'Profiles', charge:'Charge Mode', ai:'AI Tuning', wifi:'WiFi',
+    coarse:'Coarse Motor', fine:'Fine Motor', neo:'Neopixel LED', display:'Display', servo:'Servo Gate',
+    system:'System Control', errors:'Errors' };
+  document.getElementById('webSettingsTitle').textContent = titles[page] || page;
   document.getElementById('webDrawer').checked = false;
 }
 
@@ -835,7 +864,6 @@ function webToggleSim(btn) {
   }
 }
 
-// === TFT35 ===
 function tftGo(screen) {
   document.querySelectorAll('.tft-screen').forEach(s => s.classList.remove('active'));
   document.getElementById('tft-' + screen).classList.add('active');
@@ -855,21 +883,18 @@ function tftRotate() {
   const label = document.getElementById('tftRotLabel');
   const screens = document.querySelectorAll('.tft-screen');
   if (tftLandscape) {
-    frame.style.width = '480px';
-    frame.style.height = '320px';
+    frame.style.width = '480px'; frame.style.height = '320px';
     screens.forEach(s => s.style.height = '320px');
     frame.classList.remove('tft-portrait');
     label.textContent = 'Landscape (480×320)';
   } else {
-    frame.style.width = '320px';
-    frame.style.height = '480px';
+    frame.style.width = '320px'; frame.style.height = '480px';
     screens.forEach(s => s.style.height = '480px');
     frame.classList.add('tft-portrait');
     label.textContent = 'Portrait (320×480)';
   }
 }
 
-// === LCD 12864 ===
 let lcdForm = 1, lcdSel = 0;
 const lcdData = {
   1:  { title:'OpenTrickler', path:'Main', items:['Start','Cleanup','Wireless','Settings'], next:[10,20,40,30] },
@@ -885,7 +910,7 @@ const lcdData = {
   34: { title:'Profile Details (1/2)', path:'PID Details', items:['Kp:0.025','Ki:0.000','Kd:0.250','---','Kp:0.500','Ki:0.000','Kd:2.000','Next','Back'], next:[38,38,38,38,38,38,38,38,32] },
   38: { title:'Profile Details (2/2)', path:'Misc Details', items:['Coarse:0.1,5.0','Fine  :0.1,5.0','Exit','Back'], next:[30,30,30,34] },
   35: { title:'Reboot', path:'Settings > Reboot', items:['Press Next to perform','software reboot','Back','Next'], next:[30,30,30,1] },
-  36: { title:'Version Info', path:'Settings > Version', items:['Ver: 3.1.0','VCS: abc1234','Build: Debug',' OK '], next:[30,30,30,30] },
+  36: { title:'Version Info', path:'Settings > Version', items:['Ver: 3.3.0','VCS: abc1234','Build: Release',' OK '], next:[30,30,30,30] },
   37: { title:'EEPROM', path:'Settings > EEPROM', items:['Save to EEPROM','Erase EEPROM','<-Return'], next:[60,61,30] },
   39: { title:'Servo Gate Control', path:'Settings > Servo', items:['( ) Disable','(o) Close','( ) Open',' OK '], next:[30,30,30,30] },
   40: { title:'Wireless', path:'Main > WiFi', items:['Wifi Info','<-Return'], next:[41,1] },
@@ -922,13 +947,7 @@ function lcdBack() {
 }
 function lcdJump(v) { lcdForm = parseInt(v); lcdSel = 0; lcdRender(); }
 
-window.addEventListener('load', () => {
-  const footer = document.querySelector('.dev-footer');
-  const btmNav = document.querySelector('.btm-nav');
-  if (footer) footer.style.display = 'block';
-  if (btmNav) btmNav.style.display = 'flex';
-  lcdRender();
-});
+window.addEventListener('load', () => { lcdRender(); });
 </script>
 
 </body>
