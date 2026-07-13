@@ -6,11 +6,13 @@ Interactive mockup of all three OpenTrickler user interfaces:
 - **TFT35** — 480×320 color touch display (RP2350 only), with rotation toggle
 - **Mini 12864** — monochrome LCD with rotary encoder navigation (RP2040 & RP2350)
 
-## Usage
+---
 
-Open `index.html` in any browser. No server required.
+## 👉 [Click here to open the mockup](https://cavemanstoys.github.io/OpenTrickler-GUI-Mockup/)
 
-Switch between the three interfaces using the tabs at the top.
+---
+
+Switch between the three interfaces using the tabs at the top of the page.
 
 ## Features Showcased
 
